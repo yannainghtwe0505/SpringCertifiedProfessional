@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Built-By: ynain
+Build-Jdk: 21.0.3
+Implementation-Title: 00-rewards-common
+Implementation-Version: 5.3.23
+Implementation-Vendor-Id: io.spring.training.core-spring
+Implementation-Vendor: Spring Training
+Implementation-URL: https://spring.io/projects/spring-boot/parentProject
+ /00-rewards-common
+Created-By: Maven Integration for Eclipse
+
