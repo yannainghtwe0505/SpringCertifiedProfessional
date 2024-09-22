@@ -2,11 +2,15 @@ package rewards.internal.reward;
 
 import common.datetime.SimpleDate;
 import common.money.MonetaryAmount;
-import common.money.Percentage;
+import common.money.Percentage;import config.RewardsConfig;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
 import rewards.AccountContribution;
 import rewards.Dining;
 import rewards.RewardConfirmation;
@@ -34,18 +38,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class JdbcRewardRepositoryTests {
 
 	private JdbcRewardRepository repository;
-
-	private DataSource dataSource;
-
 	private JdbcTemplate jdbcTemplate;
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		dataSource = createTestDataSource();
-		repository = new JdbcRewardRepository(dataSource);
-		jdbcTemplate = new JdbcTemplate(dataSource);
-	}
+		jdbcTemplate = createTestJdbcTemplate();
+		repository = new JdbcRewardRepository(jdbcTemplate);
 
+	}
 	@Test
 	public void testCreateReward() throws SQLException {
 		Dining dining = Dining.createDining("100.00", "1234123412341234", "0123456789");
@@ -65,17 +65,9 @@ public class JdbcRewardRepositoryTests {
 
 	private void verifyRewardInserted(RewardConfirmation confirmation, Dining dining) throws SQLException {
 		assertEquals(1, getRewardCount());
-
-		//	TODO-02: Use JdbcTemplate to query for a map of all column values
-		//	of a row in the T_REWARD table based on the confirmationNumber.
-		//  - Use "SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?" as SQL statement
-		//	- After making the changes, execute this test class to verify
-		//	  its successful execution.
-		//	  (If you are using Gradle, comment out the test exclude in
-		//    the build.gradle file.)
-		//
-		
-		Map<String, Object> values = null;
+		String sql="SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?";
+			
+		Map<String, Object> values = jdbcTemplate.queryForMap(sql,confirmation.getConfirmationNumber());
 		verifyInsertedValues(confirmation, dining, values);
 	}
 
@@ -89,10 +81,10 @@ public class JdbcRewardRepositoryTests {
 		assertEquals(SimpleDate.today().asDate(), values.get("DINING_DATE"));
 	}
 
+
 	private int getRewardCount() throws SQLException {
-		// TODO-01: Use JdbcTemplate to query for the number of rows in the T_REWARD table
-		// - Use "SELECT count(*) FROM T_REWARD" as SQL statement
-		return -1;
+		String sql = "select count(*) from T_REWARD";
+		return jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 
 	private DataSource createTestDataSource() {
@@ -101,5 +93,9 @@ public class JdbcRewardRepositoryTests {
 			.addScript("/rewards/testdb/schema.sql")
 			.addScript("/rewards/testdb/data.sql")
 			.build();
+	}
+
+	private JdbcTemplate createTestJdbcTemplate() {
+		return new JdbcTemplate(createTestDataSource());
 	}
 }
