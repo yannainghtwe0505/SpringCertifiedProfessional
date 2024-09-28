@@ -2,6 +2,7 @@ package rewards.internal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
 
@@ -29,7 +30,7 @@ public class StubAccountRepository implements AccountRepository {
 		accountsByCreditCard.put("1234123412341234", account);
 	}
 
-	public Account findByCreditCard(String creditCardNumber) {
+	public Account findByCreditCardNumber(String creditCardNumber) {
 		Account account = accountsByCreditCard.get(creditCardNumber);
 		if (account == null) {
 			throw new ObjectRetrievalFailureException(Account.class, creditCardNumber);
@@ -39,5 +40,83 @@ public class StubAccountRepository implements AccountRepository {
 
 	public void updateBeneficiaries(Account account) {
 		// nothing to do, everything is in memory
+	}
+
+	@Override
+	public <S extends Account> S save(S entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <S extends Account> Iterable<S> saveAll(Iterable<S> entities) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Optional<Account> findById(Long id) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
+
+	@Override
+	public boolean existsById(Long id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Iterable<Account> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Account> findAllById(Iterable<Long> ids) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public long count() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(Account entity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteAllById(Iterable<? extends Long> ids) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteAll(Iterable<? extends Account> entities) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteAll() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Account findBycreditCardNumber(String creditCardNumber) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

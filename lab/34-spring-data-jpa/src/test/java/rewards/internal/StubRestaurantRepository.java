@@ -2,6 +2,7 @@ package rewards.internal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
 
@@ -32,7 +33,7 @@ public class StubRestaurantRepository implements RestaurantRepository {
 		restaurantsByMerchantNumber.put(restaurant.getNumber(), restaurant);
 	}
 
-	public Restaurant findByMerchantNumber(String merchantNumber) {
+	public Restaurant findByNumber(String merchantNumber) {
 		Restaurant restaurant = (Restaurant) restaurantsByMerchantNumber.get(merchantNumber);
 		if (restaurant == null) {
 			throw new ObjectRetrievalFailureException(Restaurant.class, merchantNumber);
@@ -49,5 +50,77 @@ public class StubRestaurantRepository implements RestaurantRepository {
 		public boolean isBenefitAvailableFor(Account account, Dining dining) {
 			return true;
 		}
+	}
+
+	@Override
+	public <S extends Restaurant> S save(S entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <S extends Restaurant> Iterable<S> saveAll(Iterable<S> entities) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Optional<Restaurant> findById(Long id) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
+
+	@Override
+	public boolean existsById(Long id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Iterable<Restaurant> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Restaurant> findAllById(Iterable<Long> ids) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public long count() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(Restaurant entity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteAllById(Iterable<? extends Long> ids) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteAll(Iterable<? extends Restaurant> entities) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteAll() {
+		// TODO Auto-generated method stub
+		
 	}
 }
