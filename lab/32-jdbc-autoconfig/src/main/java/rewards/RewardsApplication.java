@@ -2,7 +2,15 @@ package rewards;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import config.RewardsConfig;
 
 // TODO-00 : In this lab, you are going to exercise the following:
 // - Understanding how auto-configuration is triggered in Spring Boot application
@@ -34,7 +42,8 @@ import org.springframework.boot.SpringApplication;
 
 // TODO-13 (Optional) : Follow the instruction in the lab document.
 //           The section titled "Build and Run using Command Line tools".
-
+@SpringBootApplication(exclude = DataSourceAutoConfiguration .class)
+@Import(RewardsConfig.class)
 public class RewardsApplication {
     static final String SQL = "SELECT count(*) FROM T_ACCOUNT";
 
@@ -49,6 +58,19 @@ public class RewardsApplication {
     // - Move the SQL scripts (schema.sql and data.sql)
     //   from `src/test/resources/rewards/testdb` directory
     //   to `src/main/resources/` directory
+
+    @Bean
+    CommandLineRunner commandlineRunner(JdbcTemplate jdbcTemplate) {
+    	String sql="select count(*) from T_ACCOUNT";
+    	long numberOfAccounts=jdbcTemplate.queryForObject(sql, Long.class);
+    	logger.info("Number of accounts: {}" , numberOfAccounts);
+
+    	return args->System.out.println(numberOfAccounts);
+    }
+    @Bean
+    CommandLineRunner commandLineRunner2(RewardsRecipientProperties rewardsRecipientProperties) {
+        return args -> System.out.println("Recipient: " + rewardsRecipientProperties.getName());
+    }
 
     // TODO-05 : Implement a command line runner that will query count from
     //           T_ACCOUNT table and log the count to the console
