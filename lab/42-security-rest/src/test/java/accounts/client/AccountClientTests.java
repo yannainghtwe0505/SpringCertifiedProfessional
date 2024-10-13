@@ -1,8 +1,10 @@
 package accounts.client;
 
-import accounts.RestWsApplication;
-import common.money.Percentage;
-import org.junit.jupiter.api.Disabled;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.net.URI;
+import java.util.Random;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,17 +12,15 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import accounts.RestWsApplication;
+import common.money.Percentage;
 import rewards.internal.account.Account;
 import rewards.internal.account.Beneficiary;
 
-import java.net.URI;
-import java.util.Random;
-
-import static org.assertj.core.api.Assertions.*;
-
 // TODO-07a: Perform security testing against a running server
 // - Take some time to understand what each test is for
-// - Remove @Disabled annotation from each test and run it
+// - Remov annotation from each test and run it
 // - Make sure all tests pass
 
 @SpringBootTest(classes = {RestWsApplication.class},
@@ -33,7 +33,6 @@ public class AccountClientTests {
     private Random random = new Random();
 
     @Test
-    @Disabled
     public void listAccounts_using_invalid_user_should_return_401() throws Exception {
         ResponseEntity<String> responseEntity
                 = restTemplate.withBasicAuth("invalid", "invalid")
@@ -42,7 +41,6 @@ public class AccountClientTests {
     }
 
     @Test
-    @Disabled
     public void listAccounts_using_valid_user_should_succeed() {
         String url = "/accounts";
         // we have to use Account[] instead of List<Account>, or Jackson won't know what type to unmarshal to
@@ -58,7 +56,6 @@ public class AccountClientTests {
     }
 
     @Test
-    @Disabled
     public void listAccounts_using_valid_admin_should_succeed() {
         String url = "/accounts";
         // we have to use Account[] instead of List<Account>, or Jackson won't know what type to unmarshal to
@@ -74,7 +71,6 @@ public class AccountClientTests {
     }
 
     @Test
-    @Disabled
     public void getAccount_using_valid_user_should_succeed() {
         String url = "/accounts/{accountId}";
         ResponseEntity<Account> responseEntity
@@ -88,7 +84,6 @@ public class AccountClientTests {
     }
 
     @Test
-    @Disabled
     public void createAccount_using_admin_should_return_201() {
         String url = "/accounts";
         // use a unique number to avoid conflicts
@@ -106,13 +101,16 @@ public class AccountClientTests {
     // - Use the code above as a guidance
     @Test
     public void createAccount_using_user_should_return_403() throws Exception {
-
-
-
-    }
+        String url = "/accounts";
+        String number = String.format("12345%4d", random.nextInt(10000));
+        Account account = new Account(number, "John Doe");
+        account.addBeneficiary("Jane Doe");
+        ResponseEntity<Void> responseEntity
+                = restTemplate.withBasicAuth("user", "user")
+                              .postForEntity(url, account, Void.class);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);    }
 
     @Test
-    @Disabled
     public void addAndDeleteBeneficiary_using_superadmin_should_succeed() {
         // perform both add and delete to avoid issues with side effects
         String addUrl = "/accounts/{accountId}/beneficiaries";
