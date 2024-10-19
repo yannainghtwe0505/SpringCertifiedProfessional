@@ -36,8 +36,9 @@ public class AccountControllerTests {
 
 		// TODO-10: Fix compiler error
 		// - This constructor needs to pass MeterRegistry object as well
-		// - Run the tests (except the @Disabled ones) in this test class, they should pass
-		controller = new AccountController(new StubAccountManager());
+		// - Run the tests (except the @Disabled ones) in this test class, they should
+		// pass
+		controller = new AccountController(new StubAccountManager(), registry);
 	}
 
 	@Test
@@ -115,8 +116,7 @@ public class AccountControllerTests {
 	 * holder. Normally the DispatcherServlet does this, but we must do it manually
 	 * to run our test.
 	 *
-	 * @param url
-	 *            The URL we are creating the fake request for.
+	 * @param url The URL we are creating the fake request for.
 	 */
 	private void setupFakeRequest(String url) {
 		String requestURI = url.substring(16); // Drop "http://localhost"
